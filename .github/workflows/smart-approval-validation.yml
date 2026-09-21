@@ -13,14 +13,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     env:
-      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/hermes-venv
-      HERMES_PYTHON: ${{ runner.temp }}/hermes-venv/bin/python
       HERMES_TEST_FILE_RETRIES: '0'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: eea186fd718933c2603850aede3cdaa47cab7ff6
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Isolated test environment
+        run: |
+          echo "UV_PROJECT_ENVIRONMENT=$RUNNER_TEMP/hermes-venv" >> "$GITHUB_ENV"
+          echo "HERMES_PYTHON=$RUNNER_TEMP/hermes-venv/bin/python" >> "$GITHUB_ENV"
       - run: uv sync --frozen --extra dev --python 3.12
       - name: Related approval tests on the submitted commit
         run: >-
