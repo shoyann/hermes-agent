@@ -1,0 +1,35 @@
+name: Smart approval contribution validation
+on:
+  push:
+    branches: [validation/smart-approval-shell-comments]
+permissions:
+  contents: read
+jobs:
+  approval-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    env:
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/hermes-venv
+      HERMES_PYTHON: ${{ runner.temp }}/hermes-venv/bin/python
+      HERMES_TEST_FILE_RETRIES: '0'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: eea186fd718933c2603850aede3cdaa47cab7ff6
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - run: uv sync --frozen --extra dev --python 3.12
+      - name: Related approval tests on the submitted commit
+        run: >-
+          bash scripts/run_tests.sh -j 3
+          tests/tools/test_smart_approval_comments.py
+          tests/tools/test_smart_approval_injection.py
+          tests/tools/test_smart_approval_policy.py
+          tests/tools/test_approval.py
+          tests/tools/test_hardline_blocklist.py
+          tests/tools/test_approval_config_readonly.py -q
+      - name: Lint changed Python
+        run: $HERMES_PYTHON -m ruff check tools/approval_smart.py tests/tools/test_smart_approval_comments.py
