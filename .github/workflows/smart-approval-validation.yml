@@ -1,4 +1,4 @@
-name: Smart approval macOS baseline validation
+name: Smart approval process substitution validation
 on:
   push:
     branches: [validation/smart-approval-shell-comments]
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     env:
@@ -17,14 +17,19 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: e089be80a1c639d6919d9468077dd4431515d164
+          ref: 7b6b9be539d3f5799163a35447c4725f99df0ae6
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       - name: Isolated test environment
         run: |
           echo "UV_PROJECT_ENVIRONMENT=$RUNNER_TEMP/hermes-venv" >> "$GITHUB_ENV"
           echo "HERMES_PYTHON=$RUNNER_TEMP/hermes-venv/bin/python" >> "$GITHUB_ENV"
       - run: uv sync --frozen --extra dev --python 3.12
-      - name: Original approval tests on unchanged upstream base
+      - name: Approval regression tests on submitted commit
         run: >-
           bash scripts/run_tests.sh -j 3
-          tests/tools/test_approval.py -q
+          tests/tools/test_smart_approval_comments.py
+          tests/tools/test_smart_approval_injection.py
+          tests/tools/test_smart_approval_policy.py
+          tests/tools/test_approval.py
+          tests/tools/test_hardline_blocklist.py
+          tests/tools/test_approval_config_readonly.py -q
