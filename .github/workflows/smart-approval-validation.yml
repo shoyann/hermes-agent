@@ -1,4 +1,4 @@
-name: Smart approval process substitution validation
+name: Smart approval multiline validation
 on:
   push:
     branches: [validation/smart-approval-shell-comments]
@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: 7b6b9be539d3f5799163a35447c4725f99df0ae6
+          ref: 3ef21a4064e75476ced8d1efc5cec90b96a52eb4
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       - name: Isolated test environment
         run: |
@@ -28,6 +28,9 @@ jobs:
         run: >-
           bash scripts/run_tests.sh -j 3
           tests/tools/test_smart_approval_comments.py
+          tests/tools/test_smart_approval_multiline.py
+          tests/tools/test_approval_plugin_hooks.py
+          tests/tools/test_approval_hook_session_id.py
           tests/tools/test_smart_approval_injection.py
           tests/tools/test_smart_approval_policy.py
           tests/tools/test_approval.py
