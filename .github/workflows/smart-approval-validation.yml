@@ -1,4 +1,4 @@
-name: Smart approval arithmetic validation
+name: Smart approval input preservation validation
 on:
   push:
     branches: [validation/smart-approval-shell-comments]
@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: bec22175dd8b81079bfd8c8e51fb36f31d346e38
+          ref: d76e93dd2ed5669a6812781362876730fb973841
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       - name: Isolated test environment
         run: |
