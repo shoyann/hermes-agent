@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ref: d76e93dd2ed5669a6812781362876730fb973841
+          ref: fd4f125e7023e9c21ce7e66a3605a88fb4ab5e8c
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       - name: Isolated test environment
         run: |
